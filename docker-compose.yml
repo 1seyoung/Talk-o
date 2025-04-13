@@ -1,0 +1,81 @@
+services:
+  mysql:
+    container_name: talko-mysql
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: talko
+      MYSQL_ROOT_PASSWORD: 1234
+      TZ: 'Asia/Seoul'
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+      - ./db/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf
+    ports:
+      - "3308:3306"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '1.0'
+          memory: 1024M
+    networks:
+      - talko_network
+
+  mysql-exporter:
+    container_name: talko-exporter
+    image: prom/mysqld-exporter
+    command:
+      - '--config.my-cnf=/etc/mysql/exporter.cnf'
+      - "--collect.global_status"
+      - "--collect.info_schema.innodb_metrics"
+    volumes:
+      - ./config/exporter.cnf:/etc/mysql/exporter.cnf:ro
+    ports:
+      - "9105:9104"
+    depends_on:
+      - mysql
+    networks:
+      - talko_network
+
+  app:
+    container_name: talko-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/talko
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 1234
+    depends_on:
+      - mysql
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1024M
+        reservations:
+          cpus: '1.0'
+          memory: 1024M
+    networks:
+      - talko_network
+
+# frontend:
+#   container_name: talko-frontend
+#   build:
+#     context: ../talko-front
+#     dockerfile: Dockerfile
+#   ports:
+#     - "3001:80"
+#   networks:
+#     - talko_network
+
+volumes:
+  mysql-data:
+
+networks:
+  talko_network:
+    driver: bridge

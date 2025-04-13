@@ -35,3 +35,18 @@ out/
 
 ### VS Code ###
 .vscode/
+.idea/
+
+src/main/resources/application-secret.yml
+
+
+# Database files
+db/mysql/data/
+
+
+script/concurrency-tests/secrets.sh
+script/summary.json
+script/concurrency-tests/results
+
+uploads/
+**/uploads/
