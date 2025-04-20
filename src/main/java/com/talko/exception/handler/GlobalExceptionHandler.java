@@ -15,6 +15,16 @@ public class GlobalExceptionHandler {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
 
+  /**
+   * Handles BusinessException instances thrown by controllers and returns a standardized error response.
+   *
+   * Constructs a ResponseEntity containing an ErrorResponse with the error code, exception message, and request URI.
+   * Logs the error if the associated HTTP status is a server error (5xx).
+   *
+   * @param e the exception containing error details
+   * @param request the HTTP request that triggered the exception
+   * @return a ResponseEntity with the appropriate HTTP status and error response body
+   */
   @ExceptionHandler(BusinessException.class)
   public ResponseEntity<ErrorResponse> handleBusinessException(BaseException e, HttpServletRequest request) {
     if (e.getErrorCode().getStatus().is5xxServerError()) {

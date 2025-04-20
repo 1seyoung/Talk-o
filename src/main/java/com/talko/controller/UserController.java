@@ -20,11 +20,22 @@ public class UserController {
 
   private final UserService memberService;
 
+  /**
+   * Constructs a new UserController with the specified UserService.
+   *
+   * @param memberService the service handling user-related operations
+   */
   @Autowired
   public UserController(UserService memberService) {
     this.memberService = memberService;
   }
 
+  /**
+   * Handles user signup requests by creating a new user account.
+   *
+   * @param request the signup information provided by the client
+   * @return a response entity containing the signup result
+   */
   @PostMapping("/signup")
   public ResponseEntity<UserSignupResponseDto> signupUser(
       @RequestBody UserSignupRequestDto request) {
@@ -33,6 +44,12 @@ public class UserController {
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * Checks if a user email already exists in the system.
+   *
+   * @param request the request containing the email to check
+   * @return HTTP 200 response with true if the email exists, false otherwise
+   */
   @GetMapping("/check-email")
   public ResponseEntity<Boolean> checkEmailExists(@Valid @ModelAttribute CheckEmailRequestDto request) {
     boolean exists = memberService.emailExists(request.getEmail());

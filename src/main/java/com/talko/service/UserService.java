@@ -13,11 +13,21 @@ public class UserService {
   private final PasswordEncoder passwordEncoder;
   private final UserMapper memberMapper;
 
+  /****
+   * Constructs a UserService with the specified password encoder and user mapper.
+   */
   public UserService(PasswordEncoder passwordEncoder, UserMapper memberMapper) {
     this.passwordEncoder = passwordEncoder;
     this.memberMapper = memberMapper;
   }
 
+  /**
+   * Registers a new user by encoding the password, saving the user to the database, and returning a signup response.
+   *
+   * @param request the user signup request containing user details and raw password
+   * @return a response DTO representing the newly registered user
+   * @throws RuntimeException if the user could not be saved to the database
+   */
   public UserSignupResponseDto signup(UserSignupRequestDto request) {
     String encodePassword = passwordEncoder.encode(request.getPassword());
     User member = request.toDomain(encodePassword);
@@ -30,6 +40,12 @@ public class UserService {
     return UserSignupResponseDto.from(member);
   }
 
+  /**
+   * Checks whether a user with the specified email exists in the database.
+   *
+   * @param email the email address to check for existence
+   * @return true if a user with the given email exists, false otherwise
+   */
   public boolean emailExists(String email) {
     return memberMapper.existsByEmail(email);
   }

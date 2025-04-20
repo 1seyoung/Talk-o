@@ -14,6 +14,13 @@ public enum ErrorCode {
   private final String code;
   private final String message;
 
+  /**
+   * Constructs an ErrorCode enum constant with the specified HTTP status, error code, and message.
+   *
+   * @param status the HTTP status associated with the error
+   * @param code the custom error code string
+   * @param message the descriptive error message
+   */
   ErrorCode(HttpStatus status, String code, String message) {
     this.status = status;
     this.code = code;
