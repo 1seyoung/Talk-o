@@ -63,15 +63,15 @@ services:
     networks:
       - talko_network
 
-# frontend:
-#   container_name: talko-frontend
-#   build:
-#     context: ../talko-front
-#     dockerfile: Dockerfile
-#   ports:
-#     - "3001:80"
-#   networks:
-#     - talko_network
+#  frontend:
+#     container_name: talko-frontend
+#     build:
+#       context: ../talk-o-front
+#       dockerfile: Dockerfile
+#     ports:
+#       - "3001:80"
+#     networks:
+#       - talko_network
 
 volumes:
   mysql-data:

@@ -34,7 +34,7 @@ public class UserController {
   }
 
   @GetMapping("/check-email")
-  public ResponseEntity<Boolean> checkEmailExists(@Valid @ModelAttribute CheckEmailRequestDto request) {
+  public ResponseEntity<Boolean> checkEmailExists(CheckEmailRequestDto request) {
     boolean exists = userService.emailExists(request.getEmail());
     return ResponseEntity.ok(exists);
   }
