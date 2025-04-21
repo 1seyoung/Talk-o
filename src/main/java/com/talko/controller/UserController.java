@@ -18,24 +18,24 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/user")
 public class UserController {
 
-  private final UserService memberService;
+  private final UserService userService;
 
   @Autowired
-  public UserController(UserService memberService) {
-    this.memberService = memberService;
+  public UserController(UserService userService) {
+    this.userService = userService;
   }
 
   @PostMapping("/signup")
   public ResponseEntity<UserSignupResponseDto> signupUser(
-      @RequestBody UserSignupRequestDto request) {
+      @Valid @RequestBody UserSignupRequestDto request) {
 
-    UserSignupResponseDto response = memberService.signup(request);
+    UserSignupResponseDto response = userService.signup(request);
     return ResponseEntity.ok(response);
   }
 
   @GetMapping("/check-email")
   public ResponseEntity<Boolean> checkEmailExists(@Valid @ModelAttribute CheckEmailRequestDto request) {
-    boolean exists = memberService.emailExists(request.getEmail());
+    boolean exists = userService.emailExists(request.getEmail());
     return ResponseEntity.ok(exists);
   }
 

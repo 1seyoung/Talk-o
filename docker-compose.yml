@@ -4,7 +4,7 @@ services:
     image: mysql:8.0
     environment:
       MYSQL_DATABASE: talko
-      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       TZ: 'Asia/Seoul'
     volumes:
       - ./db/mysql/data:/var/lib/mysql
@@ -49,7 +49,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/talko
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: 1234
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     depends_on:
       - mysql
     deploy:

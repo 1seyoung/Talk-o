@@ -15,4 +15,7 @@ public interface UserMapper {
 
   @Select("SELECT EXISTS (SELECT 1 FROM users WHERE email = #{email})")
   boolean existsByEmail(String email);
+
+  @Select("SELECT * FROM users WHERE email = #{email}")
+  User findByEmail(String email);
 }
