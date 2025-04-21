@@ -1,0 +1,40 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: talko
+
+  config:
+    import: application-secret.yml
+    activate:
+      on-profile: docker
+
+  datasource:
+    url: jdbc:mysql://mysql:3308/talko
+    username: root
+    password: ${MYSQL_ROOT_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    +   hikari:
+    +     maximum-pool-size: 10
+    +     minimum-idle: 5
+    +     idle-timeout: 30000
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+      file-size-threshold: 2KB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 3600000
+
+file:
+  upload-dir: ${FILE_UPLOAD_DIR}
