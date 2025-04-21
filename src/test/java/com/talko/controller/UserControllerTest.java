@@ -60,7 +60,7 @@ class UserControllerTest {
         .andExpect(jsonPath("$.email").value("test_user1@example.com"))
         .andExpect(jsonPath("$.name").value("테스터"));
 
-    User savedUser = userMapper.findByEmail(email);
+    User savedUser = userMapper.findUserByEmail(email);
     assertNotEquals(plainPassword, savedUser.getPassword());
     assertTrue(passwordEncoder.matches(plainPassword, savedUser.getPassword()));
 

@@ -17,5 +17,5 @@ public interface UserMapper {
   boolean existsByEmail(String email);
 
   @Select("SELECT * FROM users WHERE email = #{email}")
-  User findByEmail(String email);
+  User findUserByEmail(String email);
 }
