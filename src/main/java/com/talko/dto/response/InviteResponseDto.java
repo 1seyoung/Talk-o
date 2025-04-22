@@ -19,7 +19,7 @@ public class InviteResponseDto {
         .invitationId(invitation.getId())
         .chatroomId(invitation.getChatroomId())
         .inviteeId(invitation.getInviteeId())
-        .status(invitation.getStatus())
+        .status(invitation.getStatus().name())
         .invitedAt(invitation.getInvitedAt())
         .build();
   }

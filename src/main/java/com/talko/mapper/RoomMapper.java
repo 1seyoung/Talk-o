@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 @Mapper
@@ -18,11 +19,11 @@ public interface RoomMapper {
 
 
   @Select("""
-        SELECT id, name, created_at, updated_at
-        FROM chatrooms
-        WHERE id = #{roomId}
-    """)
+    SELECT id, name, host_id, participant_count, created_at, updated_at
+    FROM chatrooms
+    WHERE id = #{roomId}
+""")
   Room findById(Long roomId);
 
-  List<Room> findByIds(List<Long> roomIds);
+  List<Room> findByIds(@Param("ids") List<Long> ids);
 }

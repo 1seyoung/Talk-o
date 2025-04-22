@@ -8,6 +8,7 @@ import com.talko.dto.response.InvitationResponseDto;
 import com.talko.exception.business.RoomNotFoundException;
 import com.talko.mapper.InvitationMapper;
 import com.talko.mapper.RoomMapper;
+import com.talko.mapper.RoomMemberMapper;
 import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +18,17 @@ public class InvitationService {
 
   private final InvitationMapper invitationMapper;
   private final RoomMapper roomMapper;
+  private final RoomMemberMapper roomMemberMapper;
 
-  public InvitationService(InvitationMapper invitationMapper, RoomMapper roomMapper) {
+  public InvitationService(InvitationMapper invitationMapper, RoomMapper roomMapper,
+      RoomMemberMapper roomMemberMapper) {
     this.invitationMapper = invitationMapper;
     this.roomMapper = roomMapper;
+    this.roomMemberMapper = roomMemberMapper;
   }
 
   public List<InvitationResponseDto> getMyInvitations(AuthInfo authInfo) {
+
     List<Invitation> invitations = invitationMapper.findAllByInviteeId(authInfo.getUserId());
     return invitations.stream()
         .map(InvitationResponseDto::from)
@@ -60,7 +65,7 @@ public class InvitationService {
       if (room == null) {
         throw new RoomNotFoundException("Room not found");
       }
-    roomMemberMapper.insertRoomMember(room.getId(), authInfo.getUserId(), RoomRole.MEMBER);
+    roomMemberMapper.insertRoomMember(room.getId(), authInfo.getUserId(), RoomRole.MEMBER.name());
     }
 
 

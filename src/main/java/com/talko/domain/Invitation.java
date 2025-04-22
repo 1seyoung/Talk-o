@@ -33,7 +33,7 @@ public class Invitation {
   }
 
   private boolean isPending() {
-    return this.status.equals("PENDING");
+    return this.status == InvitationStatus.PENDING;
   }
   public void accept() {
     if(!isPending()) {

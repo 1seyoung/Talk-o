@@ -1,6 +1,7 @@
 package com.talko.mapper;
 
 import com.talko.domain.User;
+import com.talko.dto.response.UserNameDto;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Insert;
@@ -26,4 +27,7 @@ public interface UserMapper {
   @Select("SELECT * FROM users WHERE id = #{userId}")
   User findById(Long userId);
 
-  Map<Long, String> findNamesByIds(@Param("ids") List<Long> userIds);}
+  @MapKey("id")
+  Map<Long, UserNameDto> findNamesByIds(@Param("list") List<Long> ids);
+
+}

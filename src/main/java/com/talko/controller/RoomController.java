@@ -29,28 +29,24 @@ public class RoomController {
     this.roomService = roomService;
   }
 
-  //  채팅방 생성             POST   /api/rooms
   @PostMapping
   public ResponseEntity<RoomCreateResponseDto> createRoom(@RequestBody RoomCreateRequestDto request ,@Auth AuthInfo authInfo){
     RoomCreateResponseDto response = roomService.createRoom(request, authInfo);
     return ResponseEntity.ok(response);
   }
 
-//  채팅방 목록 조회(내가 참여하고있는 전체목록)        GET    /api/rooms
   @GetMapping
   public ResponseEntity<List<RoomSimpleResponseDto>> getMyChatRooms(@Auth AuthInfo authInfo) {
     List<RoomSimpleResponseDto> rooms = roomService.getRoomsByUser(authInfo);
     return ResponseEntity.ok(rooms);
   }
 
-//  특정 채팅방 정보 조회 (선택한거 하나)  GET    /api/rooms/{roomId}
   @GetMapping("/{roomId}")
   public ResponseEntity<RoomInfoResponseDto> getRoomInfo(@PathVariable Long roomId, @Auth AuthInfo authInfo) {
     RoomInfoResponseDto response = roomService.getRoomInfo(roomId, authInfo);
     return ResponseEntity.ok(response);
   }
 
-  //채팅방 초대             POST   /api/rooms/{roomId}/invite
   @PostMapping("/{roomId}/invite")
   public ResponseEntity<InviteResponseDto> inviteUserToRoom(@PathVariable Long roomId, @RequestBody InviteRequestDto request, @Auth AuthInfo authInfo) {
     InviteResponseDto response = roomService.inviteUserToRoom(roomId, request, authInfo);

@@ -22,6 +22,4 @@ public class RoomMember {
         .joinedAt(LocalDateTime.now())
         .build();
   }
-
-
 }

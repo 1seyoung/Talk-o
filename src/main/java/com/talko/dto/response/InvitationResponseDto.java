@@ -1,6 +1,7 @@
 package com.talko.dto.response;
 
 import com.talko.domain.Invitation;
+import com.talko.domain.type.InvitationStatus;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ public class InvitationResponseDto {
   private Long chatroomId;
   private Long inviterId;
   private Long inviteeId;
-  private String status; // pending, accepted, rejected
+  private InvitationStatus status; // pending, accepted, rejected
   private LocalDateTime invitedAt;
   private LocalDateTime respondedAt;
 

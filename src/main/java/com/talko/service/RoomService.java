@@ -13,6 +13,7 @@ import com.talko.dto.response.RoomCreateResponseDto;
 import com.talko.domain.type.AuthInfo;
 import com.talko.dto.response.RoomInfoResponseDto;
 import com.talko.dto.response.RoomSimpleResponseDto;
+import com.talko.dto.response.UserNameDto;
 import com.talko.exception.business.RoomMemberNotFoundException;
 import com.talko.exception.business.RoomNotFoundException;
 import com.talko.exception.business.RoomNotHostException;
@@ -64,6 +65,7 @@ public class RoomService {
   }
 
   public InviteResponseDto inviteUserToRoom(Long roomId, InviteRequestDto request, AuthInfo authInfo) {
+    // TODO : 초대하기 기능 구현 : 까먹고 id 로 초대됨..다시 수정하기
     User host = userMapper.findById(authInfo.getUserId());
     if (host == null) {
       throw new UserNotFoundException("Host not found");
@@ -126,14 +128,17 @@ public class RoomService {
         .distinct()
         .toList();
 
-    Map<Long, String> userNameMap = userMapper.findNamesByIds(userIds);
+    Map<Long, UserNameDto> userNameMap = userMapper.findNamesByIds(userIds);
 
     List<MemberInfoDto> members = roomMembers.stream()
-        .map(rm -> MemberInfoDto.of(
-            rm.getUserId(),
-            userNameMap.get(rm.getUserId()),
-            rm.getRole()
-        ))
+        .map(rm -> {
+          UserNameDto dto = userNameMap.get(rm.getUserId());
+          return MemberInfoDto.of(
+              rm.getUserId(),
+              dto != null ? dto.getName() : "알 수 없음",
+              rm.getRole()
+          );
+        })
         .toList();
 
     return members;

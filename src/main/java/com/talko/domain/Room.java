@@ -3,8 +3,10 @@ package com.talko.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class Room {
   private Long id;
   private String name;
