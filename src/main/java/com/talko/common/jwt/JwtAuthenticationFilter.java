@@ -1,6 +1,6 @@
 package com.talko.common.jwt;
 
-import com.talko.dto.type.AuthInfo;
+import com.talko.domain.type.AuthInfo;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;

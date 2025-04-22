@@ -6,9 +6,8 @@ import com.talko.common.jwt.JwtUtil;
 import com.talko.domain.User;
 import com.talko.dto.request.LoginRequestDto;
 import com.talko.dto.response.LoginResponseDto;
-import com.talko.dto.type.AuthInfo;
+import com.talko.domain.type.AuthInfo;
 import com.talko.exception.business.InvalidCredentialsException;
-import com.talko.exception.business.UserNotFoundException;
 import com.talko.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 

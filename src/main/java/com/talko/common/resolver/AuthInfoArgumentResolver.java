@@ -1,7 +1,7 @@
 package com.talko.common.resolver;
 
 import com.talko.common.annotation.Auth;
-import com.talko.dto.type.AuthInfo;
+import com.talko.domain.type.AuthInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

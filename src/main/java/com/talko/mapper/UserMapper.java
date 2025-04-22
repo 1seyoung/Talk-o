@@ -1,9 +1,13 @@
 package com.talko.mapper;
 
 import com.talko.domain.User;
+import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 @Mapper
@@ -18,4 +22,8 @@ public interface UserMapper {
 
   @Select("SELECT * FROM users WHERE email = #{email}")
   User findUserByEmail(String email);
-}
+
+  @Select("SELECT * FROM users WHERE id = #{userId}")
+  User findById(Long userId);
+
+  Map<Long, String> findNamesByIds(@Param("ids") List<Long> userIds);}

@@ -3,7 +3,7 @@ package com.talko.controller;
 import com.talko.common.annotation.Auth;
 import com.talko.dto.request.LoginRequestDto;
 import com.talko.dto.response.LoginResponseDto;
-import com.talko.dto.type.AuthInfo;
+import com.talko.domain.type.AuthInfo;
 import com.talko.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.talko.dto.type;
+package com.talko.domain.type;
 
 import lombok.Getter;
 
