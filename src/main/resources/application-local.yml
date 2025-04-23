@@ -21,6 +21,11 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
 
+loggig:
+  level:
+    root: INFO
+    com.talko: DEBUG
+
 jwt:
   secret: ${JWT_SECRET}
   expiration: 3600000

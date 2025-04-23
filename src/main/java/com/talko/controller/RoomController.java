@@ -10,6 +10,7 @@ import com.talko.dto.response.RoomInfoResponseDto;
 import com.talko.dto.response.RoomSimpleResponseDto;
 import com.talko.service.RoomService;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.Mapping;
@@ -20,14 +21,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/rooms")
 public class RoomController {
 
   private final RoomService roomService;
-
-  public RoomController(RoomService roomService) {
-    this.roomService = roomService;
-  }
 
   @PostMapping
   public ResponseEntity<RoomCreateResponseDto> createRoom(@RequestBody RoomCreateRequestDto request ,@Auth AuthInfo authInfo){

@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(ValidException.class)
   public ResponseEntity<ErrorResponse> handleValidException(ValidException e, HttpServletRequest request) {
     if (e.getErrorCode().getStatus().is5xxServerError()) {
-      log.error("Business Error: {}", e.getMessage(), e);
+      log.error("Validation Error: {}", e.getMessage(), e);
     }
     return ResponseEntity
         .status(e.getErrorCode().getStatus())

@@ -37,6 +37,9 @@ public class JwtUtil {
   }
 
   public boolean validateAccessToken(String token) {
+    if (token == null || token.isEmpty()) {
+      return false;
+    }
     try {
       Jwts.parserBuilder()
           .setSigningKey(getSigningKey())
@@ -47,7 +50,6 @@ public class JwtUtil {
       Date expiration = claims.getExpiration();
       return !expiration.before(new Date());
     } catch (JwtException e) {
-      System.out.println("JWT 검증 실패: " + e.getMessage());
       return false;
     }
   }

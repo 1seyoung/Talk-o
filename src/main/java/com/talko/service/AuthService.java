@@ -32,7 +32,7 @@ public class AuthService {
     }
 
     if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-      throw new RuntimeException("Invalid Password");
+      throw new InvalidCredentialsException("Invalid email or password");
     }
 
     String accessToken = jwtUtil.createAccessToken(
