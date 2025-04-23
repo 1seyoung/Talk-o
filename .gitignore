@@ -37,6 +37,8 @@ out/
 .vscode/
 .idea/
 
+
+.env
 src/main/resources/application-secret.yml
 
 
@@ -50,3 +52,6 @@ script/concurrency-tests/results
 
 uploads/
 **/uploads/
+
+.DS_Store
+src/.DS_Store
