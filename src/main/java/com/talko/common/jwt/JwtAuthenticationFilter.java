@@ -62,8 +62,9 @@ public class JwtAuthenticationFilter implements Filter {
       if (jwtUtil.validateAccessToken(token)) {
         String email = jwtUtil.extractEmail(token);
         Long userId = jwtUtil.extractUserId(token);
+        String name = jwtUtil.extractName(token);
 
-        AuthInfo authInfo = new AuthInfo(email, userId);
+        AuthInfo authInfo = new AuthInfo(email, userId, name);
         httpRequest.setAttribute("authInfo", authInfo);
 
         filterChain.doFilter(request, response);
