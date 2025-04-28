@@ -1,7 +1,6 @@
 package com.talko.common.jwt;
 
 import com.talko.domain.type.AuthInfo;
-import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
@@ -75,9 +74,9 @@ public class JwtAuthenticationFilter implements Filter {
     Long userId = jwtUtil.extractUserId(token);
     String name = jwtUtil.extractName(token);
 
-    AuthInfo authInfo = new AuthInfo(email, userId, name);
+    AuthInfo info = new AuthInfo(email, userId, name);
 
-    return authInfo;
+    return info;
   }
 
   @Override
