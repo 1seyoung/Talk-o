@@ -1,6 +1,6 @@
 package com.talko.common.config;
 
-import com.talko.exception.valid.PasswordValidationException;
+import com.talko.web.exception.valid.PasswordValidationException;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
