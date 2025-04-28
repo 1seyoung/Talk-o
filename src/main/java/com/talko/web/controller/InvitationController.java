@@ -19,26 +19,26 @@ public class InvitationController {
 
   private final InvitationService invitationService;
 
-  @GetMapping //초대 받은 목록 확인
+  @GetMapping
   public ResponseEntity<List<InvitationResponseDto>> getMyInvitations(@Auth AuthInfo authInfo) {
     List<InvitationResponseDto> invitations = invitationService.getMyInvitations(authInfo);
     return ResponseEntity.ok(invitations);
   }
 
-  @GetMapping("/{inviteId}") // 초대하나 확인
+  @GetMapping("/{inviteId}")
   public ResponseEntity<InvitationResponseDto> getInvitationDetail(@PathVariable Long inviteId, @Auth AuthInfo authInfo) {
     InvitationResponseDto response = invitationService.getInvitationDetail(inviteId, authInfo);
     return ResponseEntity.ok(response);
   }
 
-  @PostMapping("/{inviteId}/accept") //초대 수락
+  @PostMapping("/{inviteId}/accept")
   public ResponseEntity<Void> acceptInvitation(@PathVariable Long inviteId, @Auth AuthInfo authInfo) {
     invitationService.acceptInvitation(inviteId, authInfo);
     return ResponseEntity.ok().build();
   }
 
 
-  @PostMapping("/{inviteId}/reject") //초대 거절
+  @PostMapping("/{inviteId}/reject")
   public ResponseEntity<Void> rejectInvitation(@PathVariable Long inviteId, @Auth AuthInfo authInfo) {
     invitationService.rejectInvitation(inviteId, authInfo);
     return ResponseEntity.ok().build();

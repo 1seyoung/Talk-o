@@ -1,19 +1,31 @@
 package com.talko.websocket.handler;
 
+import com.talko.common.annotation.Auth;
+import com.talko.common.annotation.WsAuth;
+import com.talko.domain.type.AuthInfo;
 import com.talko.websocket.service.ChatRoomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Controller
 @RequiredArgsConstructor
 public class ChatRoomHandler {
 
-  //방 입장
+  private final ChatRoomService chatRoomService;
 
-  //방 퇴장
+  @MessageMapping("/chat/enter/{roomId}")
+  public void enterRoom(@DestinationVariable Long roomId, SimpMessageHeaderAccessor headerAccessor, @WsAuth AuthInfo authInfo) {
+    chatRoomService.enterRoom(roomId, headerAccessor.getSessionId(), authInfo.getUserId());
+  }
 
-  /**
-   * WEBSOCKET TODO 1 : 방 정보 수정
-   *
-   */
+  @EventListener
+  public void handleSessionDisconnect(SessionDisconnectEvent event) {
+    String sessionId = event.getSessionId();
+    chatRoomService.leaveRoom(sessionId);
+  }
 }

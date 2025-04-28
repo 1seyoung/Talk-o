@@ -1,6 +1,7 @@
 package com.talko.websocket.handler;
 
 import com.talko.common.annotation.Auth;
+import com.talko.common.annotation.WsAuth;
 import com.talko.domain.type.AuthInfo;
 import com.talko.websocket.dto.request.ChatMessageRequestDto;
 import com.talko.websocket.service.ChatMessageService;
@@ -22,8 +23,7 @@ public class ChatMessageHandler {
   클라이언트에서 /app/chat/message/{roomId}로 메시지를 전송하면 처리하는 핸들러(컨트롤러)
    */
   @MessageMapping("/chat/message/{roomId}")
-  public void sendMessage(@DestinationVariable Long roomId, ChatMessageRequestDto request , SimpMessageHeaderAccessor headerAccessor) {
-    AuthInfo authInfo = WebSocketAuthUtils.getAuthInfo(headerAccessor);
+  public void sendMessage(@DestinationVariable Long roomId, ChatMessageRequestDto request , SimpMessageHeaderAccessor headerAccessor, @WsAuth AuthInfo authInfo) {
     chatMessageService.sendMessage(roomId, request, authInfo);
   }
 

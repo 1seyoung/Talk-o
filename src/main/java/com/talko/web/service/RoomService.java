@@ -22,6 +22,7 @@ import com.talko.web.mapper.InvitationMapper;
 import com.talko.web.mapper.RoomMapper;
 import com.talko.web.mapper.RoomMemberMapper;
 import com.talko.web.mapper.UserMapper;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
@@ -93,15 +94,22 @@ public class RoomService {
   }
 
   public List<RoomSimpleResponseDto> getRoomsByUser(AuthInfo authInfo) {
+    List<RoomSimpleResponseDto> result = new ArrayList<>();
+
+    result.add(RoomSimpleResponseDto.createSelfChatRoom(
+        authInfo.getUserId(),
+        authInfo.getName()
+    ));
+
     List<Long> roomIds = roomMemberMapper.findRoomIdsByUserId(authInfo.getUserId());
-    if (roomIds.isEmpty()) {return List.of();}
+    if (!roomIds.isEmpty()) {
+      List<Room> rooms = roomMapper.findByIds(roomIds);
+      result.addAll(rooms.stream()
+          .map(RoomSimpleResponseDto::from)
+          .toList());
+    }
 
-    List<Room> rooms = roomMapper.findByIds(roomIds);
-
-    return rooms.stream()
-        .map(RoomSimpleResponseDto::from)
-        .toList();
-
+    return result;
   }
 
   public RoomInfoResponseDto getRoomInfo(Long roomId, AuthInfo authInfo) {
@@ -157,5 +165,21 @@ public class RoomService {
     if (!isMember) {
       throw new RoomMemberNotFoundException("채팅방에 참여하지 않은 사용자입니다.");
     }
+  }
+
+  public RoomInfoResponseDto getSelfRoomInfo(AuthInfo authInfo) {
+
+    RoomInfoResponseDto selfChatInfo = RoomInfoResponseDto.builder()
+        .id(-1L)
+        .name("나와의 채팅")
+        .hostName(authInfo.getName())
+        .members(List.of(MemberInfoDto.of(
+            authInfo.getUserId(),
+            authInfo.getName(),
+            RoomRole.HOST
+        )))
+        .build();
+
+    return selfChatInfo;
   }
 }

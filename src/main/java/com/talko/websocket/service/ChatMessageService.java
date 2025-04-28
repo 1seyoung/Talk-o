@@ -3,6 +3,7 @@ package com.talko.websocket.service;
 import com.talko.domain.type.AuthInfo;
 import com.talko.websocket.domain.ChatMessage;
 import com.talko.websocket.dto.request.ChatMessageRequestDto;
+import com.talko.websocket.dto.response.ChatMessageResponseDto;
 import com.talko.websocket.service.factory.ChatMessageFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,9 @@ public class ChatMessageService {
     ChatMessage message = chatMessageFactory.create(request);
     String destination = buildDestination(roomId, message, authInfo.getUserId());
 
-    simpMessageSendingOperations.convertAndSend(destination, message);
+
+    ChatMessageResponseDto responseDto = ChatMessageResponseDto.from(message, authInfo);
+    simpMessageSendingOperations.convertAndSend(destination, responseDto);
     log.info("메시지 전송 완료 - destination={}, messageType={}, contentType={}",
         destination, message.getMessageType(), message.getContentType());
   }

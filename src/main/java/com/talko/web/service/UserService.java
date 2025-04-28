@@ -13,10 +13,13 @@ public class UserService {
 
   private final TalkoPasswordEncoder passwordEncoder;
   private final UserMapper userMapper;
+  private final RoomService roomService;
 
-  public UserService(TalkoPasswordEncoder passwordEncoder, UserMapper userMapper) {
+  public UserService(TalkoPasswordEncoder passwordEncoder, UserMapper userMapper,
+      RoomService roomService) {
     this.passwordEncoder = passwordEncoder;
     this.userMapper = userMapper;
+    this.roomService = roomService;
   }
 
   public UserSignupResponseDto signup(UserSignupRequestDto request) {
@@ -27,7 +30,6 @@ public class UserService {
     if (rowsAffected != 1) {
       throw new DatabaseInsertFailedException("회원가입 중 users 테이블 insert 실패");
     }
-
     return UserSignupResponseDto.from(member);
   }
 

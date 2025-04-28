@@ -44,9 +44,16 @@ public class RoomController {
     return ResponseEntity.ok(response);
   }
 
+  @GetMapping("/self")
+  public ResponseEntity<RoomInfoResponseDto> getSelfChatRoom(@Auth AuthInfo authInfo) {
+    RoomInfoResponseDto response = roomService.getSelfRoomInfo(authInfo);
+    return ResponseEntity.ok(response);
+  }
+
   @PostMapping("/{roomId}/invite")
   public ResponseEntity<InviteResponseDto> inviteUserToRoom(@PathVariable Long roomId, @RequestBody InviteRequestDto request, @Auth AuthInfo authInfo) {
     InviteResponseDto response = roomService.inviteUserToRoom(roomId, request, authInfo);
     return ResponseEntity.ok(response);
   }
+
 }

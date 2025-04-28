@@ -1,6 +1,7 @@
 package com.talko.common.config;
 
 import com.talko.common.jwt.JwtUtil;
+import com.talko.common.resolver.WsAuthInfoArgumentResolver;
 import com.talko.domain.type.AuthInfo;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -14,6 +15,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.messaging.handler.invocation.HandlerMethodArgumentResolver;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.util.unit.DataSize;
@@ -75,7 +77,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
           try {
-            // 1. 헤더에서 토큰 추출
             List<String> authorization = accessor.getNativeHeader("Authorization");
             if (authorization == null || authorization.isEmpty()) {
               throw new Exception("Authorization header is missing");
@@ -86,19 +87,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
               token = token.substring(7);
             }
 
-            // 2. JwtUtil로 토큰 검증
             if (!jwtUtil.validateAccessToken(token)) {
               throw new Exception("Invalid JWT token");
             }
 
-            // 3. JwtUtil로 사용자 정보 추출 (필터와 동일한 방식)
             String email = jwtUtil.extractEmail(token);
             Long userId = jwtUtil.extractUserId(token);
             String name = jwtUtil.extractName(token);
 
-            // 4. 인증 정보 설정 (필터와 동일한 방식)
             AuthInfo authInfo = new AuthInfo(email, userId, name);
-            accessor.setUser(() -> email);
+            //accessor.setUser(() -> email);
+            accessor.setUser(() -> userId.toString());
             accessor.getSessionAttributes().put("authInfo", authInfo);
             accessor.getSessionAttributes().put("userId", userId);
             accessor.getSessionAttributes().put("name", name);
@@ -119,5 +118,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     scheduler.setDaemon(true);
     scheduler.initialize();
     return scheduler;
+  }
+
+
+  @Override
+  public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+    resolvers.add(new WsAuthInfoArgumentResolver());
   }
 }
