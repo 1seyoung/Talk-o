@@ -1,6 +1,7 @@
 package com.talko.common.jwt;
 
 import com.talko.domain.type.AuthInfo;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
@@ -45,37 +46,40 @@ public class JwtAuthenticationFilter implements Filter {
     HttpServletResponse httpResponse = (HttpServletResponse) response;
 
     if (shouldNotFilter(httpRequest)) {
-      if (request.getAttribute("authInfo") != null && onlyForGuestPaths.contains(
-          httpRequest.getServletPath())) {
-        httpResponse.sendRedirect("/dashboard");
-        return;
-      }
       filterChain.doFilter(request, response);
       return;
     }
 
     String authHeader = httpRequest.getHeader("Authorization");
 
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      String token = authHeader.substring(7);
-
-      if (jwtUtil.validateAccessToken(token)) {
-        String email = jwtUtil.extractEmail(token);
-        Long userId = jwtUtil.extractUserId(token);
-        String name = jwtUtil.extractName(token);
-
-        AuthInfo authInfo = new AuthInfo(email, userId, name);
-        httpRequest.setAttribute("authInfo", authInfo);
-
-        filterChain.doFilter(request, response);
-        return;
-      } else {
-        httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
-        return;
-      }
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or Invalid Authorization header");
+      return;
     }
+
+    String token = authHeader.substring(7);
+
+    if (!jwtUtil.validateAccessToken(token)) {
+      httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
+      return;
+    }
+
+    AuthInfo authInfo = extractAuthInfo(token);
+    httpRequest.setAttribute("authInfo", authInfo);
+
     filterChain.doFilter(request, response);
   }
+
+  public AuthInfo extractAuthInfo (String token) {
+    String email = jwtUtil.extractEmail(token);
+    Long userId = jwtUtil.extractUserId(token);
+    String name = jwtUtil.extractName(token);
+
+    AuthInfo authInfo = new AuthInfo(email, userId, name);
+
+    return authInfo;
+  }
+
   @Override
   public void destroy() {
     Filter.super.destroy();
