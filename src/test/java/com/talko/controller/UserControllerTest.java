@@ -11,8 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.talko.common.config.PasswordConfig.TalkoPasswordEncoder;
 import com.talko.domain.User;
-import com.talko.dto.request.UserSignupRequestDto;
-import com.talko.mapper.UserMapper;
+import com.talko.web.dto.request.UserSignupRequestDto;
+import com.talko.web.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

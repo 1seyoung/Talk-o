@@ -23,7 +23,9 @@ public class JwtAuthenticationFilter implements Filter {
 
   private static final List<String> onlyForGuestPaths = List.of(
       "/api/auth/login",
-      "/api/auth/register"
+      "/api/auth/logout",
+      "/api/user/signup",
+      "/api/user/check-email"
   );
 
   private static final List<String> alwaysAccessiblePaths = List.of(
@@ -44,41 +46,56 @@ public class JwtAuthenticationFilter implements Filter {
     HttpServletRequest httpRequest = (HttpServletRequest) request;
     HttpServletResponse httpResponse = (HttpServletResponse) response;
 
+    httpResponse.setHeader("Access-Control-Allow-Origin", httpRequest.getHeader("Origin"));
+    httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+    httpResponse.setHeader("Access-Control-Allow-Headers", "authorization, content-type");
+    httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+
+    if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+      httpResponse.setStatus(HttpServletResponse.SC_OK);
+      return;
+    }
+
     if (shouldNotFilter(httpRequest)) {
-      if (request.getAttribute("authInfo") != null && onlyForGuestPaths.contains(
-          httpRequest.getServletPath())) {
-        httpResponse.sendRedirect("/dashboard");
-        return;
-      }
       filterChain.doFilter(request, response);
       return;
     }
 
     String authHeader = httpRequest.getHeader("Authorization");
 
-    if (authHeader != null && authHeader.startsWith("Bearer ")) {
-      String token = authHeader.substring(7);
-
-      if (jwtUtil.validateAccessToken(token)) {
-        String email = jwtUtil.extractEmail(token);
-        Long userId = jwtUtil.extractUserId(token);
-
-        AuthInfo authInfo = new AuthInfo(email, userId);
-        httpRequest.setAttribute("authInfo", authInfo);
-
-        filterChain.doFilter(request, response);
-        return;
-      } else {
-        httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
-        return;
-      }
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+      httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or Invalid Authorization header");
+      return;
     }
+
+    String token = authHeader.substring(7);
+
+    if (!jwtUtil.validateAccessToken(token)) {
+      httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT Token");
+      return;
+    }
+
+    AuthInfo authInfo = extractAuthInfo(token);
+    httpRequest.setAttribute("authInfo", authInfo);
+
     filterChain.doFilter(request, response);
   }
+
+  public AuthInfo extractAuthInfo (String token) {
+    String email = jwtUtil.extractEmail(token);
+    Long userId = jwtUtil.extractUserId(token);
+    String name = jwtUtil.extractName(token);
+
+    AuthInfo info = new AuthInfo(email, userId, name);
+
+    return info;
+  }
+
   @Override
   public void destroy() {
     Filter.super.destroy();
   }
+
   private boolean shouldNotFilter(HttpServletRequest request) {
 
     String path = request.getServletPath();
@@ -86,7 +103,7 @@ public class JwtAuthenticationFilter implements Filter {
     if (alwaysAccessiblePaths.contains(path)) {
       return true;
     }
-    return onlyForGuestPaths.contains(path) && request.getAttribute("authInfo") != null;
+    return onlyForGuestPaths.contains(path);
   }
 
 }
